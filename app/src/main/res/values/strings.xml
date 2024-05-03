@@ -2,4 +2,18 @@
     <string name="app_name">BudgetTracker</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string-array name="accounts">
+        <item>Наличные</item>
+        <item>Безналичные</item>
+    </string-array>
+    <string-array name="categories">
+        <item>Коммунальные</item>
+        <item>Телефон</item>
+        <item>Интернет</item>
+        <item>Транспорт</item>
+        <item>Супермаркет</item>
+        <item>Медицина</item>
+        <item>Одежда</item>
+        <item>Прочие</item>
+    </string-array>
 </resources>

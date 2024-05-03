@@ -8,8 +8,10 @@ import android.view.ViewGroup
 import com.example.budgettracker.R
 import com.example.budgettracker.databinding.FragmentBalanceBinding
 import com.example.budgettracker.databinding.FragmentHomeBinding
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class BalanceFragment : Fragment() {
     private lateinit var binding: FragmentBalanceBinding
 

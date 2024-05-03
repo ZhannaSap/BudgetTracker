@@ -9,7 +9,7 @@
         android:id="@+id/homeFragment"
         android:name="com.example.budgettracker.ui.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_balanceFragment"
             app:destination="@id/balanceFragment" />
@@ -29,20 +29,37 @@
         android:id="@+id/expencesFragment"
         android:name="com.example.budgettracker.ui.expences.ExpencesFragment"
         android:label="fragment_expences"
-        tools:layout="@layout/fragment_expences" >
+        tools:layout="@layout/fragment_expences">
         <argument
             android:name="expencesId"
-            app:argType="integer"
-            android:defaultValue="-1" />
+            android:defaultValue="-1"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_expencesFragment_to_addDataFragment"
+            app:destination="@id/addDataFragment" />
     </fragment>
     <fragment
         android:id="@+id/incomeFragment"
         android:name="com.example.budgettracker.ui.income.IncomeFragment"
         android:label="fragment_income"
-        tools:layout="@layout/fragment_income" >
+        tools:layout="@layout/fragment_income">
         <argument
             android:name="incomeId"
-            app:argType="integer"
-            android:defaultValue="-1" />
+            android:defaultValue="-1"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_incomeFragment_to_addIncomeFragment2"
+            app:destination="@id/addIncomeFragment2" />
+
     </fragment>
+    <fragment
+        android:id="@+id/addDataFragment"
+        android:name="com.example.budgettracker.ui.adddata.AddExpencesFragment"
+        android:label="fragment_add_data"
+        tools:layout="@layout/fragment_add_expences" />
+    <fragment
+        android:id="@+id/addIncomeFragment2"
+        tools:layout="@layout/fragment_add_income"
+        android:name="com.example.budgettracker.ui.adddata.AddIncomeFragment"
+        android:label="AddIncomeFragment" />
 </navigation>
