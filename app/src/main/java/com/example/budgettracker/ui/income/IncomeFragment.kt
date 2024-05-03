@@ -9,7 +9,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.budgettracker.R
 import com.example.budgettracker.data.expences.ExpencesEntity
+import com.example.budgettracker.data.income.IncomeEntity
 import com.example.budgettracker.databinding.FragmentIncomeBinding
+import com.example.budgettracker.ui.expences.ExpencesAdapter
 import com.example.budgettracker.ui.viewModel.BudgetViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -34,7 +36,7 @@ class IncomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.rvIncomes.adapter = adapter
 
-        viewModel.getAllExpences().observe(viewLifecycleOwner) {
+        viewModel.getAllIncomes().observe(viewLifecycleOwner) {
             adapter.submitList(it)
             sumTotal = 0
             it.forEach {
@@ -47,7 +49,7 @@ class IncomeFragment : Fragment() {
         }
     }
 
-    private fun onClick(dataEntity: ExpencesEntity) {
+    private fun onClick(dataEntity: IncomeEntity) {
 
     }
 }

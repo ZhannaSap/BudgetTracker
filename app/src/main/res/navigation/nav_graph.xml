@@ -61,5 +61,10 @@
         android:id="@+id/addIncomeFragment2"
         tools:layout="@layout/fragment_add_income"
         android:name="com.example.budgettracker.ui.adddata.AddIncomeFragment"
-        android:label="AddIncomeFragment" />
+        android:label="AddIncomeFragment" >
+        <argument
+            android:name="incomeId"
+            android:defaultValue="-1"
+            app:argType="integer" />
+    </fragment>
 </navigation>

@@ -34,20 +34,20 @@ class HomeFragment : Fragment() {
         initClickers()
         binding.run {
             viewModel.getAllIncomes().observe(viewLifecycleOwner) {
-                Log.e("ololo", "onViewCreated: $it", )
                 incomesTotal = 0
                 it.forEach {
                     incomesTotal += it.sum
                 }
-                tvIncomeTotal.text = sumTotal.toString()
+                tvIncomeTotal.text = "+${incomesTotal.toString()}"
             }
             viewModel.getAllExpences().observe(viewLifecycleOwner) {
                 expencesTotal = 0
                 it.forEach {
                     expencesTotal += it.sum
                 }
-                tvExpencesTotal.text = sumTotal.toString()
+                tvExpencesTotal.text = "- ${expencesTotal.toString()}"
             }
+
             tvBalanceTotal.text = (incomesTotal - expencesTotal).toString()
 
         }
@@ -55,7 +55,6 @@ class HomeFragment : Fragment() {
 
     private fun initClickers() {
         binding.run {
-
             containerBalance.setOnClickListener {
                 findNavController().navigate(R.id.action_homeFragment_to_balanceFragment)
             }

@@ -6,12 +6,15 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budgettracker.data.expences.ExpencesEntity
+import com.example.budgettracker.data.income.IncomeEntity
 import com.example.budgettracker.databinding.ItemMoneyDataBinding
 
-class IncomeAdapter (private val onClick: (dataModel: ExpencesEntity)-> Unit) : ListAdapter<ExpencesEntity, DataViewHolder>(NewsDiffUtil()) {
+class IncomeAdapter (private val onClick: (dataModel: IncomeEntity)-> Unit) : ListAdapter<IncomeEntity, IncomeViewHolder>(
+    NewsDiffUtil()
+) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataViewHolder {
-        return DataViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IncomeViewHolder {
+        return IncomeViewHolder(
             ItemMoneyDataBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
@@ -20,7 +23,7 @@ class IncomeAdapter (private val onClick: (dataModel: ExpencesEntity)-> Unit) : 
         )
     }
 
-    override fun onBindViewHolder(holder: DataViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: IncomeViewHolder, position: Int) {
         holder.bind(getItem(position))
         holder.itemView.setOnClickListener {
             onClick(getItem(position))
@@ -28,20 +31,20 @@ class IncomeAdapter (private val onClick: (dataModel: ExpencesEntity)-> Unit) : 
     }
 }
 
-class DataViewHolder(private val binding: ItemMoneyDataBinding) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(dataEntity: ExpencesEntity) {
-        binding.tvCategory.text = dataEntity.category
+class IncomeViewHolder(private val binding: ItemMoneyDataBinding) : RecyclerView.ViewHolder(binding.root) {
+    fun bind(dataEntity: IncomeEntity) {
+        binding.tvCategory.text = dataEntity.account
         binding.tvDate.text = dataEntity.date
         binding.tvSum.text = dataEntity.sum.toString()
     }
 }
 
-class NewsDiffUtil : DiffUtil.ItemCallback<ExpencesEntity>() {
-    override fun areItemsTheSame(oldItem: ExpencesEntity, newItem: ExpencesEntity): Boolean {
+class NewsDiffUtil : DiffUtil.ItemCallback<IncomeEntity>() {
+    override fun areItemsTheSame(oldItem: IncomeEntity, newItem: IncomeEntity): Boolean {
         return oldItem.id == newItem.id
     }
 
-    override fun areContentsTheSame(oldItem: ExpencesEntity, newItem: ExpencesEntity): Boolean {
+    override fun areContentsTheSame(oldItem: IncomeEntity, newItem: IncomeEntity): Boolean {
         return oldItem == newItem
     }
 
