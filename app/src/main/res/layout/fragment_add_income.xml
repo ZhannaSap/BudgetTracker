@@ -76,7 +76,8 @@
             android:id="@+id/et_date"
             android:layout_width="200dp"
             android:layout_height="50dp"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="20dp"
+            android:clickable="true" />
 
         <EditText
             android:id="@+id/et_comment"
@@ -94,5 +95,16 @@
         android:src="@drawable/ic_save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="28dp"
+        android:src="@drawable/ic_delete"
+        android:backgroundTint="@color/red"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btn_save" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

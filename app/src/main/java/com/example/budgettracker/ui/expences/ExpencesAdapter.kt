@@ -23,9 +23,10 @@ class ExpencesAdapter (private val onClick: (dataModel: ExpencesEntity)-> Unit) 
     }
 
     override fun onBindViewHolder(holder: DataViewHolder, position: Int) {
+        val item = getItem(position)
         holder.bind(getItem(position))
         holder.itemView.setOnClickListener {
-            onClick(getItem(position))
+            onClick(item)
         }
     }
 }
@@ -35,6 +36,7 @@ class DataViewHolder(private val binding: ItemMoneyDataBinding) : RecyclerView.V
         binding.tvCategory.text = dataEntity.category
         binding.tvDate.text = dataEntity.date
         binding.tvSum.text = dataEntity.sum.toString()
+        binding.tvComment.text = dataEntity.comment
     }
 }
 

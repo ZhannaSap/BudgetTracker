@@ -1,5 +1,6 @@
 package com.example.budgettracker.data.income
 
+import android.accounts.Account
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
@@ -21,4 +22,14 @@ interface IncomeDao {
 
     @Update
     suspend fun update(dataEntity: IncomeEntity)
+    @Query("SELECT * FROM income WHERE id = :itemId")
+    fun getItemById(itemId: Int): IncomeEntity
+
+    @Query("SELECT * FROM income WHERE account = :account")
+    fun getAllByCategory(account: String): LiveData<IncomeEntity>
+    @Query("SELECT * FROM income ORDER BY date DESC")
+    fun getAllByDate(): LiveData<List<IncomeEntity>>
+
+    @Query("SELECT * FROM income WHERE date LIKE '%' || :partialDate || '%'")
+    fun getAllByPartialDate(partialDate: String): LiveData<List<IncomeEntity>>
 }

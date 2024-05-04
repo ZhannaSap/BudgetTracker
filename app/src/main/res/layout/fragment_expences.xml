@@ -6,6 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".ui.expences.ExpencesFragment">
 
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/searchView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/container_expences"
@@ -13,7 +20,7 @@
         android:layout_height="50dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/searchView">
 
         <TextView
             android:id="@+id/tv_balance"
@@ -31,11 +38,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
-            tools:text="10 756"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="10 756" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <View
@@ -58,43 +65,44 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_add"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/linear"
-        android:layout_margin="16dp"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
         android:backgroundTint="@color/dark_green"
         android:src="@drawable/ic_add"
-        android:layout_height="wrap_content"/>
-
-    <LinearLayout
-        android:id="@+id/linear"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="8dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        <TextView
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:background="@drawable/bg_btn_category"
-            android:gravity="center"
-            android:text="Дни"
-            android:textColor="@color/white" />
+    <!--    <LinearLayout
+            android:id="@+id/linear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
-        <TextView
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="2dp"
-            android:background="@drawable/bg_btn_category"
-            android:gravity="center"
-            android:text="Категории"
-            android:textColor="@color/white" />
+            <TextView
+                android:id="@+id/tv_btn_days"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:background="@drawable/bg_btn_category"
+                android:gravity="center"
+                android:text="Дни"
+                android:textColor="@color/white" />
 
-    </LinearLayout>
+            <TextView
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="2dp"
+                android:background="@drawable/bg_btn_category"
+                android:gravity="center"
+                android:text="Категории"
+                android:textColor="@color/white" />
+
+        </LinearLayout>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

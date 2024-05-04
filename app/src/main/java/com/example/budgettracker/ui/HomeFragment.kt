@@ -16,7 +16,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
-    var sumTotal = 0
     var expencesTotal = 0
     var incomesTotal = 0
     private val viewModel: BudgetViewModel by viewModels()
@@ -39,6 +38,7 @@ class HomeFragment : Fragment() {
                     incomesTotal += it.sum
                 }
                 tvIncomeTotal.text = "+${incomesTotal.toString()}"
+                tvBalanceTotal.text = (incomesTotal - expencesTotal).toString()
             }
             viewModel.getAllExpences().observe(viewLifecycleOwner) {
                 expencesTotal = 0
@@ -46,9 +46,9 @@ class HomeFragment : Fragment() {
                     expencesTotal += it.sum
                 }
                 tvExpencesTotal.text = "- ${expencesTotal.toString()}"
+                tvBalanceTotal.text = (incomesTotal - expencesTotal).toString()
             }
 
-            tvBalanceTotal.text = (incomesTotal - expencesTotal).toString()
 
         }
     }

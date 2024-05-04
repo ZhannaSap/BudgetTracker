@@ -24,9 +24,10 @@ class IncomeAdapter (private val onClick: (dataModel: IncomeEntity)-> Unit) : Li
     }
 
     override fun onBindViewHolder(holder: IncomeViewHolder, position: Int) {
+        val item = getItem(position)
         holder.bind(getItem(position))
         holder.itemView.setOnClickListener {
-            onClick(getItem(position))
+            onClick(item)
         }
     }
 }
@@ -36,6 +37,7 @@ class IncomeViewHolder(private val binding: ItemMoneyDataBinding) : RecyclerView
         binding.tvCategory.text = dataEntity.account
         binding.tvDate.text = dataEntity.date
         binding.tvSum.text = dataEntity.sum.toString()
+        binding.tvComment.text = dataEntity.comment
     }
 }
 

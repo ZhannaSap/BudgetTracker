@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.budgettracker.R
@@ -36,7 +37,34 @@ class IncomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.rvIncomes.adapter = adapter
 
-        viewModel.getAllIncomes().observe(viewLifecycleOwner) {
+        loadAllIncomes()
+        binding.btnAdd.setOnClickListener {
+            findNavController().navigate(R.id.action_incomeFragment_to_addIncomeFragment2)
+        }
+
+        binding.searchView.setOnCloseListener {
+            loadAllIncomes()
+            false
+        }
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+            androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String): Boolean {
+                if (query.isNotEmpty()) {
+                    performSearch(query)
+                }
+                return true
+            }
+            override fun onQueryTextChange(newText: String): Boolean {
+                if (newText.isNotEmpty()) {
+                    performSearch(newText)
+                }
+                return true
+            }
+        })
+    }
+
+    private fun loadAllIncomes() {
+        viewModel.getIByDays().observe(viewLifecycleOwner) {
             adapter.submitList(it)
             sumTotal = 0
             it.forEach {
@@ -44,12 +72,22 @@ class IncomeFragment : Fragment() {
             }
             binding.tvBalanceTotal.text = sumTotal.toString()
         }
-        binding.btnAdd.setOnClickListener {
-            findNavController().navigate(R.id.action_incomeFragment_to_addIncomeFragment2)
+    }
+
+    private fun performSearch(query: String) {
+        viewModel.getAllIncomeByPartialDate(query).observe(viewLifecycleOwner) { incomes ->
+            adapter.submitList(incomes)
+            sumTotal = 0
+            incomes.forEach {
+                sumTotal +=it.sum
+            }
+            binding.tvBalanceTotal.text = sumTotal.toString()
         }
     }
 
     private fun onClick(dataEntity: IncomeEntity) {
-
+        val action =
+            IncomeFragmentDirections.actionIncomeFragmentToAddIncomeFragment2(dataEntity.id!!)
+        findNavController().navigate(action)
     }
 }
