@@ -43,7 +43,6 @@ class AddAccountFragment : Fragment() {
                 CoroutineScope(Dispatchers.IO).launch {
                     val accountEntity: AccountEntity = viewModel.getAccountById(accountId)
                     withContext(Dispatchers.Main) {
-                        Log.e("ololo", "onViewCreated: $accountEntity")
                         etName.setText(accountEntity.accountName)
                     }
                 }

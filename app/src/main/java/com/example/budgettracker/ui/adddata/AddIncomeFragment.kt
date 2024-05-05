@@ -56,15 +56,12 @@ class AddIncomeFragment : Fragment() {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             binding.spinnerAccount.adapter = adapter
         }
-
-
         binding.etDate.requestFocus()
         val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
         val formattedDate = dateFormat.format(calendar.time)
         binding.etDate.setText(formattedDate)
         binding.run {
             incomeId = arguments?.getInt("incomeId", -1) ?: -1
-            Log.e("ololo", "addFragment inc: $incomeId")
             if (incomeId != -1) {
                 CoroutineScope(Dispatchers.IO).launch {
                     val incomeEntity: IncomeEntity = viewModel.getIById(incomeId)
@@ -72,6 +69,16 @@ class AddIncomeFragment : Fragment() {
                         etSum.setText(incomeEntity.sum.toString())
                         etDate.setText(incomeEntity.date)
                         etComment.setText(incomeEntity.comment)
+                        incFirst = incomeEntity.sum.toString()
+
+                        val accountName = incomeEntity.account
+                        withContext(Dispatchers.Main) {
+                            val adapter = binding.spinnerAccount.adapter as? ArrayAdapter<String>
+                            val position = adapter?.getPosition(accountName)
+                            if (position != null && position >= 0) {
+                                binding.spinnerAccount.setSelection(position)
+                            }
+                        }
                     }
                 }
             }
@@ -80,30 +87,31 @@ class AddIncomeFragment : Fragment() {
                 showDatePickerAlertDialog()
             }
             btnSave.setOnClickListener {
-                CoroutineScope(Dispatchers.IO).launch {
-                    if (incomeId != -1) {
-                        val accountEntity =
-                            viewModel.getAccountByName(spinnerAccount.selectedItem.toString())
-                        val sumFromEditText = etSum.text.toString().toIntOrNull() ?: 0
-                        val diff = sumFromEditText - incFirst.toInt()
-                        val sum = accountEntity.sum ?: 0
-                        accountEntity.sum = sum + diff
-                        viewModel.updateA(accountEntity)
+
+                if (incomeId != -1) {
+                    val accountEntity =
+                        viewModel.getAccountByName(spinnerAccount.selectedItem.toString())
+                    val sumFromEditText = etSum.text.toString().toIntOrNull() ?: 0
+                    val diff = if (incFirst.isNotEmpty()) {
+                        sumFromEditText - incFirst.toInt()
                     } else {
-                        val accountEntity =
-                            viewModel.getAccountByName(spinnerAccount.selectedItem.toString())
-                        val sumFromEditText = etSum.text.toString().toIntOrNull() ?: 0
-                        val sum = accountEntity.sum ?: 0
-                        accountEntity.sum = sum + sumFromEditText
-                        viewModel.updateA(accountEntity)
+                        0
                     }
-                    withContext(Dispatchers.Main) {
-                        if (incomeId != -1) {
-                            update()
-                        } else {
-                            insert()
-                        }
-                    }
+                    val sum = accountEntity.sum ?: 0
+                    accountEntity.sum = sum + diff
+                    viewModel.updateA(accountEntity)
+                } else {
+                    val accountEntity =
+                        viewModel.getAccountByName(spinnerAccount.selectedItem.toString())
+                    val sumFromEditText = etSum.text.toString().toIntOrNull() ?: 0
+                    val sum = accountEntity.sum ?: 0
+                    accountEntity.sum = sum + sumFromEditText
+                    viewModel.updateA(accountEntity)
+                }
+                if (incomeId != -1) {
+                    update()
+                } else {
+                    insert()
                 }
             }
             btnDelete.setOnClickListener {
@@ -125,10 +133,10 @@ class AddIncomeFragment : Fragment() {
     }
 
     private fun FragmentAddIncomeBinding.update() {
+        val account = spinnerAccount.selectedItem.toString()
         if (etSum.text.isEmpty()) {
             Toast.makeText(requireContext(), "Заполните поле суммы!", Toast.LENGTH_SHORT).show()
         } else {
-            val account = spinnerAccount.selectedItem.toString()
             val updatedData = IncomeEntity(
                 id = incomeId,
                 account = account,
@@ -142,11 +150,12 @@ class AddIncomeFragment : Fragment() {
     }
 
     private fun FragmentAddIncomeBinding.insert() {
+        val account = spinnerAccount.selectedItem.toString()
         if (etSum.text.isEmpty()) {
             Toast.makeText(requireContext(), "Заполните поле суммы!", Toast.LENGTH_SHORT).show()
         } else {
             val data = IncomeEntity(
-                account = spinnerAccount.selectedItem.toString(),
+                account = account,
                 sum = etSum.text.toString().toInt(),
                 date = etDate.text.toString(),
                 comment = etComment.text.toString()
@@ -157,9 +166,10 @@ class AddIncomeFragment : Fragment() {
     }
 
     private fun FragmentAddIncomeBinding.delete() {
+        val account = spinnerAccount.selectedItem.toString()
         val data = IncomeEntity(
             id = incomeId,
-            account = spinnerAccount.selectedItem.toString(),
+            account = account,
             sum = etSum.text.toString().toInt(),
             date = etDate.text.toString(),
             comment = etComment.text.toString()
