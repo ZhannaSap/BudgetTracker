@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.example.budgettracker.R
 import com.example.budgettracker.data.expences.ExpencesEntity
 import com.example.budgettracker.databinding.FragmentAddExpencesBinding
 import com.example.budgettracker.ui.viewModel.BudgetViewModel
@@ -58,6 +59,9 @@ class AddExpencesFragment : Fragment() {
                         etSum.setText(expencesEntity.sum.toString())
                         etDate.setText(expencesEntity.date)
                         etComment.setText(expencesEntity.comment)
+
+                        val categoryPosition = resources.getStringArray(R.array.categories).indexOf(expencesEntity.category)
+                        spinnerCategory.setSelection(categoryPosition)
                     }
                 }
             }
