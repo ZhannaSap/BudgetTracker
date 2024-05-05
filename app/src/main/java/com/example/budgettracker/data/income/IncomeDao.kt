@@ -17,16 +17,18 @@ interface IncomeDao {
     @Delete
     suspend fun delete(dataEntity: IncomeEntity)
 
-    @Query("SELECT*FROM income")
+    @Query("SELECT * FROM income")
     fun getAll(): LiveData<List<IncomeEntity>>
 
     @Update
     suspend fun update(dataEntity: IncomeEntity)
+
     @Query("SELECT * FROM income WHERE id = :itemId")
     fun getItemById(itemId: Int): IncomeEntity
 
     @Query("SELECT * FROM income WHERE account = :account")
-    fun getAllByCategory(account: String): LiveData<IncomeEntity>
+    fun getAllByAccount(account: String): LiveData<List<IncomeEntity>>
+
     @Query("SELECT * FROM income ORDER BY date DESC")
     fun getAllByDate(): LiveData<List<IncomeEntity>>
 

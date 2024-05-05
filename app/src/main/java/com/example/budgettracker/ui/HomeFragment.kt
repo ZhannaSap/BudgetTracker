@@ -9,9 +9,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.budgettracker.R
+import com.example.budgettracker.data.accounts.AccountEntity
 import com.example.budgettracker.databinding.FragmentHomeBinding
 import com.example.budgettracker.ui.viewModel.BudgetViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -34,6 +38,17 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        CoroutineScope(Dispatchers.IO).launch {
+            val firstAccount = viewModel.getAccountById(0) ?: null
+            if (firstAccount == null) {
+                val accountCash = AccountEntity(
+                    id = 0,
+                    accountName = "Наличные",
+                    sum = 0
+                )
+                viewModel.insertA(accountCash)
+            }
+        }
         initClickers()
         val dateFormat = SimpleDateFormat(".MM.yyyy", Locale.getDefault())
         val formattedDate: String = dateFormat.format(calendar.time)
@@ -43,8 +58,7 @@ class HomeFragment : Fragment() {
                 it.forEach {
                     incomesTotal += it.sum
                 }
-                tvIncomeTotal.text = "+${incomesTotal.toString()}"
-                tvBalanceTotal.text = (incomesTotal - expencesTotal).toString()
+                tvIncomeTotal.text = "+$incomesTotal"
             }
             viewModel.getAllExpencesByPartialDate(formattedDate).observe(viewLifecycleOwner) {
                 expencesTotal = 0
@@ -73,8 +87,8 @@ class HomeFragment : Fragment() {
                 incomesTotal += it.sum
             }
             binding.tvBalanceTotal.text = (incomesTotal - expencesTotal).toString()
-
         }
+
     }
 
     private fun initClickers() {

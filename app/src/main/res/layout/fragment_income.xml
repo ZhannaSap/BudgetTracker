@@ -74,35 +74,4 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-<!--    <LinearLayout
-        android:id="@+id/linear"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="8dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <TextView
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:background="@drawable/bg_btn_category"
-            android:gravity="center"
-            android:text="Дни"
-            android:textColor="@color/white" />
-
-        <TextView
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="2dp"
-            android:background="@drawable/bg_btn_category"
-            android:gravity="center"
-            android:text="Категории"
-            android:textColor="@color/white" />
-
-    </LinearLayout>-->
-
 </androidx.constraintlayout.widget.ConstraintLayout>

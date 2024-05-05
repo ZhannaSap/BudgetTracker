@@ -16,7 +16,7 @@ interface ExpencesDao {
     @Delete
     suspend fun delete(dataEntity: ExpencesEntity)
 
-    @Query("SELECT*FROM expences")
+    @Query("SELECT * FROM expences")
     fun getAll(): LiveData<List<ExpencesEntity>>
 
     @Update
@@ -24,6 +24,9 @@ interface ExpencesDao {
 
     @Query("SELECT * FROM expences WHERE category = :category")
     fun getAllByCategory(category: String): LiveData<ExpencesEntity>
+
+    @Query("SELECT * FROM expences WHERE account = :account")
+    fun getAllByAccount(account: String): LiveData<List<ExpencesEntity>>
 
     @Query("SELECT * FROM expences WHERE id = :itemId")
     fun getItemById(itemId: Int): ExpencesEntity

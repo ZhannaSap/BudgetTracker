@@ -20,11 +20,21 @@
             android:id="@+id/action_homeFragment_to_expencesFragment"
             app:destination="@id/expencesFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/balanceFragment"
         android:name="com.example.budgettracker.ui.balance.BalanceFragment"
         android:label="fragment_balance"
-        tools:layout="@layout/fragment_balance" />
+        tools:layout="@layout/fragment_balance">
+        <action
+            android:id="@+id/action_balanceFragment_to_addAccountFragment"
+            app:destination="@id/addAccountFragment">
+            <argument
+                android:name="accountId"
+                app:argType="integer" />
+        </action>
+    </fragment>
+
     <fragment
         android:id="@+id/expencesFragment"
         android:name="com.example.budgettracker.ui.expences.ExpencesFragment"
@@ -36,10 +46,10 @@
             app:argType="integer" />
         <action
             android:id="@+id/action_expencesFragment_to_addDataFragment"
-            app:destination="@id/addDataFragment" >
+            app:destination="@id/addExpencesFragment">
             <argument
                 android:name="expenceId"
-                app:argType="integer"/>
+                app:argType="integer" />
         </action>
     </fragment>
 
@@ -54,19 +64,18 @@
             app:argType="integer" />
         <action
             android:id="@+id/action_incomeFragment_to_addIncomeFragment2"
-            app:destination="@id/addIncomeFragment2" >
+            app:destination="@id/addIncomeFragment">
             <argument
                 android:name="incomeId"
                 app:argType="integer" />
         </action>
-
     </fragment>
 
     <fragment
-        android:id="@+id/addDataFragment"
+        android:id="@+id/addExpencesFragment"
         android:name="com.example.budgettracker.ui.adddata.AddExpencesFragment"
         android:label="fragment_add_data"
-        tools:layout="@layout/fragment_add_expences" >
+        tools:layout="@layout/fragment_add_expences">
         <argument
             android:name="expenceId"
             android:defaultValue="-1"
@@ -74,13 +83,25 @@
     </fragment>
 
     <fragment
-        android:id="@+id/addIncomeFragment2"
-        tools:layout="@layout/fragment_add_income"
+        android:id="@+id/addIncomeFragment"
         android:name="com.example.budgettracker.ui.adddata.AddIncomeFragment"
-        android:label="AddIncomeFragment" >
+        android:label="AddIncomeFragment"
+        tools:layout="@layout/fragment_add_income">
         <argument
             android:name="incomeId"
             android:defaultValue="-1"
             app:argType="integer" />
     </fragment>
+
+    <fragment
+        android:id="@+id/addAccountFragment"
+        android:name="com.example.budgettracker.ui.adddata.AddAccountFragment"
+        android:label="fragment_add_account"
+        tools:layout="@layout/fragment_add_account">
+        <argument
+            android:name="accountId"
+            android:defaultValue="-1"
+            app:argType="integer" />
+    </fragment>
+
 </navigation>

@@ -48,10 +48,10 @@ class AddExpencesFragment : Fragment() {
         val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
         val formattedDate = dateFormat.format(calendar.time)
         binding.etDate.setText(formattedDate)
-        binding.run {
 
+        binding.run {
             expenceId = arguments?.getInt("expenceId", -1) ?: -1
-            Log.e("ololo", "addFragment exp: $expenceId ", )
+
             if (expenceId != -1) {
                 CoroutineScope(Dispatchers.IO).launch {
                     val expencesEntity: ExpencesEntity = viewModel.getEById(expenceId)
@@ -60,7 +60,8 @@ class AddExpencesFragment : Fragment() {
                         etDate.setText(expencesEntity.date)
                         etComment.setText(expencesEntity.comment)
 
-                        val categoryPosition = resources.getStringArray(R.array.categories).indexOf(expencesEntity.category)
+                        val categoryPosition = resources.getStringArray(R.array.categories)
+                            .indexOf(expencesEntity.category)
                         spinnerCategory.setSelection(categoryPosition)
                     }
                 }
@@ -111,22 +112,32 @@ class AddExpencesFragment : Fragment() {
                 date = etDate.text.toString(),
                 comment = etComment.text.toString()
             )
+            CoroutineScope(Dispatchers.IO).launch {
+                val accountEntity = viewModel.getAccountByName(spinnerAccount.selectedItem.toString())
+                val sumFromEditText = etSum.text.toString().toIntOrNull() ?: 0
+                accountEntity.sum = (accountEntity.sum ?: 0) - sumFromEditText
+            }
             viewModel.insertE(data)
             findNavController().navigateUp()
         }
     }
 
     private fun FragmentAddExpencesBinding.delete() {
-        val data = ExpencesEntity(
-            id = expenceId,
-            category = spinnerCategory.selectedItem.toString(),
-            account = spinnerAccount.selectedItem.toString(),
-            sum = etSum.text.toString().toInt(),
-            date = etDate.text.toString(),
-            comment = etComment.text.toString()
-        )
-        viewModel.deleteE(data)
-        findNavController().navigateUp()
+        if (etSum.text.isEmpty()) {
+            Toast.makeText(requireContext(), "Заполните поле суммы!", Toast.LENGTH_SHORT)
+                .show()
+        } else {
+            val data = ExpencesEntity(
+                id = expenceId,
+                category = spinnerCategory.selectedItem.toString(),
+                account = spinnerAccount.selectedItem.toString(),
+                sum = etSum.text.toString().toInt(),
+                date = etDate.text.toString(),
+                comment = etComment.text.toString()
+            )
+            viewModel.deleteE(data)
+            findNavController().navigateUp()
+        }
     }
 
     fun showDatePickerAlertDialog() {
