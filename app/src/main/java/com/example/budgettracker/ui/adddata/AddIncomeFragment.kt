@@ -51,21 +51,20 @@ class AddIncomeFragment : Fragment() {
         val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
         val formattedDate = dateFormat.format(calendar.time)
         binding.etDate.setText(formattedDate)
-
-        incomeId = arguments?.getInt("incomeId", -1) ?: -1
-        if (incomeId != -1) {
-            CoroutineScope(Dispatchers.IO).launch {
-                val incomeEntity: IncomeEntity = viewModel.getIById(incomeId)
-                withContext(Dispatchers.Main) {
-                    if (incomeEntity != null) {
-                        binding.etSum.setText(incomeEntity.sum.toString())
-                        binding.etDate.setText(incomeEntity.date)
-                        binding.etComment.setText(incomeEntity.comment)
+        binding.run {
+            incomeId = arguments?.getInt("incomeId", -1) ?: -1
+            Log.e("ololo", "addFragment inc: $incomeId")
+            if (incomeId != -1) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    val incomeEntity: IncomeEntity = viewModel.getIById(incomeId)
+                    withContext(Dispatchers.Main) {
+                        etSum.setText(incomeEntity.sum.toString())
+                        etDate.setText(incomeEntity.date)
+                        etComment.setText(incomeEntity.comment)
                     }
                 }
             }
-        }
-        binding.run {
+
             etDate.setOnClickListener {
                 showDatePickerAlertDialog()
             }
@@ -77,7 +76,9 @@ class AddIncomeFragment : Fragment() {
                 }
             }
             btnDelete.setOnClickListener {
-                delete()
+                if (incomeId != -1) {
+                    delete()
+                }
             }
         }
     }
@@ -116,7 +117,7 @@ class AddIncomeFragment : Fragment() {
 
     private fun FragmentAddIncomeBinding.delete() {
         val data = IncomeEntity(
-            id= incomeId,
+            id = incomeId,
             account = spinnerAccount.selectedItem.toString(),
             sum = etSum.text.toString().toInt(),
             date = etDate.text.toString(),

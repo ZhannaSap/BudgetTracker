@@ -50,6 +50,7 @@ class AddExpencesFragment : Fragment() {
         binding.run {
 
             expenceId = arguments?.getInt("expenceId", -1) ?: -1
+            Log.e("ololo", "addFragment exp: $expenceId ", )
             if (expenceId != -1) {
                 CoroutineScope(Dispatchers.IO).launch {
                     val expencesEntity: ExpencesEntity = viewModel.getEById(expenceId)
@@ -60,8 +61,6 @@ class AddExpencesFragment : Fragment() {
                     }
                 }
             }
-
-
             etDate.setOnClickListener {
                 showDatePickerAlertDialog()
             }
@@ -82,33 +81,35 @@ class AddExpencesFragment : Fragment() {
         if (etSum.text.isEmpty()) {
             Toast.makeText(requireContext(), "Заполните поле суммы!", Toast.LENGTH_SHORT)
                 .show()
+        } else {
+            val updatedData = ExpencesEntity(
+                id = expenceId,
+                category = spinnerCategory.selectedItem.toString(),
+                account = spinnerAccount.selectedItem.toString(),
+                sum = etSum.text.toString().toInt(),
+                date = etDate.text.toString(),
+                comment = etComment.text.toString()
+            )
+            viewModel.updateE(updatedData)
+            findNavController().navigateUp()
         }
-        val updatedData = ExpencesEntity(
-            id = expenceId,
-            category = spinnerCategory.selectedItem.toString(),
-            account = spinnerAccount.selectedItem.toString(),
-            sum = etSum.text.toString().toInt(),
-            date = etDate.text.toString(),
-            comment = etComment.text.toString()
-        )
-        viewModel.updateE(updatedData)
-        findNavController().navigateUp()
     }
 
     private fun FragmentAddExpencesBinding.insert() {
         if (etSum.text.isEmpty()) {
             Toast.makeText(requireContext(), "Заполните поле суммы!", Toast.LENGTH_SHORT)
                 .show()
+        } else {
+            val data = ExpencesEntity(
+                category = spinnerCategory.selectedItem.toString(),
+                account = spinnerAccount.selectedItem.toString(),
+                sum = etSum.text.toString().toInt(),
+                date = etDate.text.toString(),
+                comment = etComment.text.toString()
+            )
+            viewModel.insertE(data)
+            findNavController().navigateUp()
         }
-        val data = ExpencesEntity(
-            category = spinnerCategory.selectedItem.toString(),
-            account = spinnerAccount.selectedItem.toString(),
-            sum = etSum.text.toString().toInt(),
-            date = etDate.text.toString(),
-            comment = etComment.text.toString()
-        )
-        viewModel.insertE(data)
-        findNavController().navigateUp()
     }
 
     private fun FragmentAddExpencesBinding.delete() {

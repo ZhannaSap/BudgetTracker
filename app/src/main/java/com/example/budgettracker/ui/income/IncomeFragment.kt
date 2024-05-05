@@ -1,6 +1,7 @@
 package com.example.budgettracker.ui.income
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,9 @@ import com.example.budgettracker.databinding.FragmentIncomeBinding
 import com.example.budgettracker.ui.expences.ExpencesAdapter
 import com.example.budgettracker.ui.viewModel.BudgetViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 
 @AndroidEntryPoint
@@ -23,6 +27,7 @@ class IncomeFragment : Fragment() {
     private lateinit var binding: FragmentIncomeBinding
     private val viewModel: BudgetViewModel by viewModels()
     private val adapter: IncomeAdapter = IncomeAdapter(this::onClick)
+    private val calendar = Calendar.getInstance()
     var sumTotal = 0
 
     override fun onCreateView(
@@ -36,14 +41,15 @@ class IncomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.rvIncomes.adapter = adapter
-
-        loadAllIncomes()
+        val dateFormat = SimpleDateFormat(".MM.yyyy", Locale.getDefault())
+        val formattedDate:String = dateFormat.format(calendar.time)
+        loadAllIncomes(formattedDate)
         binding.btnAdd.setOnClickListener {
             findNavController().navigate(R.id.action_incomeFragment_to_addIncomeFragment2)
         }
 
         binding.searchView.setOnCloseListener {
-            loadAllIncomes()
+            loadAllIncomes(formattedDate)
             false
         }
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
@@ -63,8 +69,8 @@ class IncomeFragment : Fragment() {
         })
     }
 
-    private fun loadAllIncomes() {
-        viewModel.getIByDays().observe(viewLifecycleOwner) {
+    private fun loadAllIncomes(formattedDate:String) {
+        viewModel.getAllIncomeByPartialDate(formattedDate).observe(viewLifecycleOwner) {
             adapter.submitList(it)
             sumTotal = 0
             it.forEach {
@@ -86,6 +92,7 @@ class IncomeFragment : Fragment() {
     }
 
     private fun onClick(dataEntity: IncomeEntity) {
+        Log.e("ololo", "onClick: $dataEntity", )
         val action =
             IncomeFragmentDirections.actionIncomeFragmentToAddIncomeFragment2(dataEntity.id!!)
         findNavController().navigate(action)

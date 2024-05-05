@@ -17,12 +17,16 @@ import com.example.budgettracker.ui.income.IncomeAdapter
 import com.example.budgettracker.ui.income.IncomeFragmentDirections
 import com.example.budgettracker.ui.viewModel.BudgetViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 @AndroidEntryPoint
 class ExpencesFragment : Fragment() {
     private lateinit var binding: FragmentExpencesBinding
     private val adapter: ExpencesAdapter = ExpencesAdapter(this::onClick)
     private val viewModel: BudgetViewModel by viewModels()
+    private val calendar = Calendar.getInstance()
     var sumTotal = 0
 
     override fun onCreateView(
@@ -36,15 +40,16 @@ class ExpencesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.rvBalanceAccounts.adapter = adapter
-
-        loadAllExpences()
+        val dateFormat = SimpleDateFormat(".MM.yyyy", Locale.getDefault())
+        val formattedDate:String = dateFormat.format(calendar.time)
+        loadAllExpences(formattedDate)
 
 
         binding.btnAdd.setOnClickListener {
             findNavController().navigate(R.id.action_expencesFragment_to_addDataFragment)
         }
         binding.searchView.setOnCloseListener {
-            loadAllExpences()
+            loadAllExpences(formattedDate)
             false
         }
 
@@ -68,8 +73,8 @@ class ExpencesFragment : Fragment() {
         })
     }
 
-    private fun loadAllExpences() {
-        viewModel.getEByDays().observe(viewLifecycleOwner) {
+    private fun loadAllExpences(formattedDate:String) {
+        viewModel.getAllExpencesByPartialDate(formattedDate).observe(viewLifecycleOwner) {
             adapter.submitList(it)
             sumTotal = 0
             it.forEach {

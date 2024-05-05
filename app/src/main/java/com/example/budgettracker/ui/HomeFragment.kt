@@ -12,12 +12,16 @@ import com.example.budgettracker.R
 import com.example.budgettracker.databinding.FragmentHomeBinding
 import com.example.budgettracker.ui.viewModel.BudgetViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
     var expencesTotal = 0
     var incomesTotal = 0
+    private val calendar = Calendar.getInstance()
     private val viewModel: BudgetViewModel by viewModels()
 
     override fun onCreateView(
@@ -31,8 +35,10 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initClickers()
+        val dateFormat = SimpleDateFormat(".MM.yyyy", Locale.getDefault())
+        val formattedDate: String = dateFormat.format(calendar.time)
         binding.run {
-            viewModel.getAllIncomes().observe(viewLifecycleOwner) {
+            viewModel.getAllIncomeByPartialDate(formattedDate).observe(viewLifecycleOwner) {
                 incomesTotal = 0
                 it.forEach {
                     incomesTotal += it.sum
@@ -40,15 +46,33 @@ class HomeFragment : Fragment() {
                 tvIncomeTotal.text = "+${incomesTotal.toString()}"
                 tvBalanceTotal.text = (incomesTotal - expencesTotal).toString()
             }
-            viewModel.getAllExpences().observe(viewLifecycleOwner) {
+            viewModel.getAllExpencesByPartialDate(formattedDate).observe(viewLifecycleOwner) {
                 expencesTotal = 0
                 it.forEach {
                     expencesTotal += it.sum
                 }
                 tvExpencesTotal.text = "- ${expencesTotal.toString()}"
-                tvBalanceTotal.text = (incomesTotal - expencesTotal).toString()
             }
 
+            countTotalSum()
+
+        }
+    }
+
+    private fun countTotalSum() {
+        viewModel.getAllExpences().observe(viewLifecycleOwner) {
+            expencesTotal = 0
+            it.forEach {
+                expencesTotal += it.sum
+            }
+            binding.tvBalanceTotal.text = (incomesTotal - expencesTotal).toString()
+        }
+        viewModel.getAllIncomes().observe(viewLifecycleOwner) {
+            incomesTotal = 0
+            it.forEach {
+                incomesTotal += it.sum
+            }
+            binding.tvBalanceTotal.text = (incomesTotal - expencesTotal).toString()
 
         }
     }
