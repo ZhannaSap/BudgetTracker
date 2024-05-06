@@ -87,27 +87,6 @@ class AddIncomeFragment : Fragment() {
                 showDatePickerAlertDialog()
             }
             btnSave.setOnClickListener {
-
-                if (incomeId != -1) {
-                    val accountEntity =
-                        viewModel.getAccountByName(spinnerAccount.selectedItem.toString())
-                    val sumFromEditText = etSum.text.toString().toIntOrNull() ?: 0
-                    val diff = if (incFirst.isNotEmpty()) {
-                        sumFromEditText - incFirst.toInt()
-                    } else {
-                        0
-                    }
-                    val sum = accountEntity.sum ?: 0
-                    accountEntity.sum = sum + diff
-                    viewModel.updateA(accountEntity)
-                } else {
-                    val accountEntity =
-                        viewModel.getAccountByName(spinnerAccount.selectedItem.toString())
-                    val sumFromEditText = etSum.text.toString().toIntOrNull() ?: 0
-                    val sum = accountEntity.sum ?: 0
-                    accountEntity.sum = sum + sumFromEditText
-                    viewModel.updateA(accountEntity)
-                }
                 if (incomeId != -1) {
                     update()
                 } else {
@@ -116,17 +95,7 @@ class AddIncomeFragment : Fragment() {
             }
             btnDelete.setOnClickListener {
                 if (incomeId != -1) {
-                    CoroutineScope(Dispatchers.IO).launch {
-                        val accountEntity =
-                            viewModel.getAccountByName(spinnerAccount.selectedItem.toString())
-                        val sumFromEditText = etSum.text.toString().toIntOrNull() ?: 0
-                        val sum = accountEntity.sum ?: 0
-                        accountEntity.sum = sum - sumFromEditText
-                        viewModel.updateA(accountEntity)
-                        withContext(Dispatchers.Main) {
-                            delete()
-                        }
-                    }
+                    delete()
                 }
             }
         }

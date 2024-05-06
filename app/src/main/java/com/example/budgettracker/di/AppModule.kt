@@ -21,6 +21,6 @@ object AppModule {
             context,
             BudgetDatabase::class.java,
             "database-budget"
-        ).allowMainThreadQueries().build()
+        ).build()
     }
 }

@@ -91,39 +91,13 @@ class AddExpencesFragment : Fragment() {
             }
             btnSave.setOnClickListener {
                 if (expenceId != -1) {
-                    val accountEntity =
-                        viewModel.getAccountByName(spinnerAccount.selectedItem.toString())
-                    val sumFromEditText = etSum.text.toString().toIntOrNull() ?: 0
-                    val diff = sumFromEditText - incFirst.toInt()
-                    val sum = accountEntity.sum ?: 0
-                    accountEntity.sum = sum - diff
-                    viewModel.updateA(accountEntity)
-                } else {
-                    val accountEntity =
-                        viewModel.getAccountByName(spinnerAccount.selectedItem.toString())
-                    val sumFromEditText = etSum.text.toString().toIntOrNull() ?: 0
-                    val sum = accountEntity.sum ?: 0
-                    accountEntity.sum = sum - sumFromEditText
-                    viewModel.updateA(accountEntity)
-                }
-                if (expenceId != -1) {
                     update()
                 } else {
                     insert()
                 }
             }
             btnDelete.setOnClickListener {
-                CoroutineScope(Dispatchers.IO).launch {
-                    val accountEntity =
-                        viewModel.getAccountByName(spinnerAccount.selectedItem.toString())
-                    val sumFromEditText = etSum.text.toString().toIntOrNull() ?: 0
-                    val sum = accountEntity.sum ?: 0
-                    accountEntity.sum = sum + sumFromEditText
-                    viewModel.updateA(accountEntity)
-                    withContext(Dispatchers.Main) {
-                        delete()
-                    }
-                }
+                delete()
             }
         }
     }

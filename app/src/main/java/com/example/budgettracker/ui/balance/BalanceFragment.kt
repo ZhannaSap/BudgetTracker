@@ -41,31 +41,59 @@ class BalanceFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.rvBalanceAccounts.adapter = adapter
 
-        countTotalSum()
-
         viewModel.getAllAccounts().observe(viewLifecycleOwner) {
             adapter.submitList(it)
+            countTotalSum()
         }
+
 
         binding.btnAdd.setOnClickListener {
             findNavController().navigate(R.id.action_balanceFragment_to_addAccountFragment)
         }
     }
 
-    private fun countTotalSum() {
-        viewModel.getAllExpences().observe(viewLifecycleOwner) {
-            expencesTotal = 0
-            it.forEach {
-                expencesTotal += it.sum
-            }
-            binding.tvBalanceTotal.text = (incomesTotal - expencesTotal).toString()
+    private fun updateAccountsBalance(balanceMap: Map<String, Int>) {
+        val updatedAccounts = adapter.currentList.map { account ->
+            val updatedSum = balanceMap[account.accountName] ?: 0
+            account.copy(sum = updatedSum)
         }
-        viewModel.getAllIncomes().observe(viewLifecycleOwner) {
-            incomesTotal = 0
-            it.forEach {
-                incomesTotal += it.sum
+        adapter.submitList(updatedAccounts)
+    }
+
+    private fun countTotalSum() {
+        var expencesMap = mutableMapOf<String, Int>() // Хранит сумму расходов для каждого счета
+        var incomesMap = mutableMapOf<String, Int>() // Хранит сумму доходов для каждого счета
+
+        viewModel.getAllExpences().observe(viewLifecycleOwner) { expences ->
+            expences.forEach { expence ->
+                val currentSum = expencesMap[expence.account] ?: 0
+                expencesMap[expence.account] = currentSum + expence.sum
             }
-            binding.tvBalanceTotal.text = (incomesTotal - expencesTotal).toString()
+
+            viewModel.getAllIncomes().observe(viewLifecycleOwner) { incomes ->
+                incomes.forEach { income ->
+                    val currentSum = incomesMap[income.account] ?: 0
+                    incomesMap[income.account] = currentSum + income.sum
+                }
+
+                // Теперь подсчитаем баланс для каждого счета
+                val updatedAccounts = adapter.currentList.map { account ->
+                    val expencesSum = expencesMap[account.accountName] ?: 0
+                    val incomesSum = incomesMap[account.accountName] ?: 0
+                    val balance = incomesSum - expencesSum
+                    account.copy(sum = balance)
+                }
+
+                // Обновим список счетов
+                adapter.submitList(updatedAccounts)
+
+                // Теперь подсчитаем общий баланс
+                var totalBalance = 0
+                updatedAccounts.forEach { account ->
+                    totalBalance += account.sum ?: 0
+                }
+                binding.tvBalanceTotal.text = totalBalance.toString()
+            }
         }
 
     }
